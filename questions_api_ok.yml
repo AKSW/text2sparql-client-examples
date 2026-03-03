@@ -1,0 +1,89 @@
+# yamllint disable rule:line-length
+---
+dataset:
+  id: https://text2sparql.aksw.org/2025/corporate/
+  prefix: ck25
+  defaultNamespace: http://ld.company.org/prod-vocab/
+questions:
+
+  - id: 1
+    question:
+      en: In which department is Ms. Brant?
+    features:
+      - SELECT
+    classes:
+      - :Department
+      - :Employee
+    properties:
+      - :memberOf
+    query:
+      sparql: |
+        PREFIX pv: <http://ld.company.org/prod-vocab/>
+        SELECT DISTINCT ?result
+        WHERE
+        {
+          <http://ld.company.org/prod-instances/empl-Karen.Brant%40company.org> pv:memberOf ?result .
+          ?result a pv:Department .
+        }
+
+  - id: 2
+    question:
+      en: What is the telephone of Baldwin Dirksen?
+    features:
+      - SELECT
+    classes:
+      - :Employee
+    properties:
+      - :phone
+    query:
+      sparql: |
+        PREFIX pv: <http://ld.company.org/prod-vocab/>
+        SELECT DISTINCT ?result
+        WHERE
+        {
+          <http://ld.company.org/prod-instances/empl-Baldwin.Dirksen%40company.org> pv:phone ?result .
+        }
+
+  - id: 3
+    question:
+      en: Who is the manager of Heinrich Hoch?
+    features:
+      - SELECT
+    classes:
+      - :Employee
+      - :Manager
+    properties:
+      - :hasManager
+    query:
+      sparql: |
+        PREFIX pv: <http://ld.company.org/prod-vocab/>
+        SELECT DISTINCT ?result
+        WHERE
+        {
+          <http://ld.company.org/prod-instances/empl-Heinrich.Hoch%40company.org> pv:hasManager ?result .
+        }
+
+  - id: 4
+    question:
+      en: What is the email of Sabrina from Marketing?
+    features:
+      - SELECT
+    classes:
+      - :Department
+      - :Employee
+    properties:
+      - :email
+      - :memberOf
+      - :name
+    query:
+      sparql: |
+        PREFIX pv: <http://ld.company.org/prod-vocab/>
+        SELECT DISTINCT ?result
+        WHERE
+        {
+          ?department pv:name "Marketing" .
+          ?person pv:memberOf ?department .
+          ?person pv:email ?result .
+          ?person pv:name ?name .
+          FILTER (CONTAINS(?name, "Sabrina"))
+        }
